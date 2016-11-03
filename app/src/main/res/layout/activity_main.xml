@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true"
+    tools:context="farmer.zpm.com.zhihuread.MainActivity">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/id_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+
+    <TextView
+        android:text="Hello World!"
+        android:background="@color/colorPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="100dp" />
+    <LinearLayout
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_margin="20dp"
+        android:layout_height="96dp">
+
+            <Button android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:text="登入或注册"
+                android:layout_marginRight="15dp"
+                android:layout_height="match_parent"/>
+            <Button android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_marginLeft="15dp"
+                android:id="@+id/enter"
+                android:text="随便逛逛"
+                android:layout_height="match_parent"/>
+
+
+    </LinearLayout>
+</RelativeLayout>
