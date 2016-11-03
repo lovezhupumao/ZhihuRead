@@ -3,6 +3,7 @@ package farmer.zpm.com.zhihuread.api;
 
 
 import farmer.zpm.com.zhihuread.entity.News;
+import farmer.zpm.com.zhihuread.entity.NewsContent;
 import okhttp3.RequestBody;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -21,5 +22,7 @@ public interface ApiService {
     @Headers({"Content-Type: application/json","Accept: application/json"})
     @GET("4/news/latest")
     Observable<News> login();
+    @GET("4/news/{id}")
+    Observable<NewsContent> getContentById(@Path("id") int id);
 
 }
