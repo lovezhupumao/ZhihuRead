@@ -57,7 +57,7 @@ public class Api {
                 .readTimeout(7676, TimeUnit.MILLISECONDS)
                 .connectTimeout(7676, TimeUnit.MILLISECONDS)
                 .addInterceptor(mInterceptor)
-                .addInterceptor(interceptor)
+//                .addInterceptor(interceptor)
                 .addNetworkInterceptor(new HttpCacheInterceptor())
                 .cache(cache)
                 .build();
@@ -66,7 +66,7 @@ public class Api {
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").serializeNulls().create();
 
         retrofit = new Retrofit.Builder()
-                //.client(okHttpClient)
+                .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .baseUrl(BASE_URL)

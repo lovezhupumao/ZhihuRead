@@ -20,6 +20,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import farmer.zpm.com.zhihuread.R;
 import farmer.zpm.com.zhihuread.adapter.FragmentAdapter;
 import farmer.zpm.com.zhihuread.adapter.RecycleViewAdapter;
@@ -46,7 +47,7 @@ public class HomeFragment extends Fragment {
     private RecycleViewAdapter adapter;
     private int begin = 0;
     private boolean isRefreshable = true, isHasHeadView = false, isEmpty = false;
-
+    private Unbinder unbinder;
     public static HomeFragment newInstance(Class<? extends BaseViewHolder> vh, String type) {
         Bundle arguments = new Bundle();
         arguments.putString("vh", vh.getCanonicalName());
@@ -69,10 +70,17 @@ public class HomeFragment extends Fragment {
 
 
         View view = inflater.inflate(R.layout.view_home_fragment, container, false);
-        ButterKnife.bind(this,view);
+        unbinder=ButterKnife.bind(this,view);
         initView(getActivity());
         return view;
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
+
     private void initView(Context context) {
         swiperefresh.setColorSchemeResources(android.R.color.holo_blue_bright);
         swiperefresh.setEnabled(isRefreshable);

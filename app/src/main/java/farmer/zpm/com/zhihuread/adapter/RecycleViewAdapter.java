@@ -45,6 +45,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<NewsListViewHolder>
                 @Override
                 public void onClick(View v) {
                     Intent intent =new Intent(context, DetailActivity.class);
+                    intent.putExtra("imageurl",news.getStories().get(position).getImages().get(0));
                     intent.putExtra("id",news.getStories().get(position).getId());
                     context.startActivity(intent);
                 }
@@ -59,6 +60,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<NewsListViewHolder>
                 @Override
                 public void onClick(View v) {
                     Intent intent =new Intent(context, DetailActivity.class);
+                    intent.putExtra("imageurl",news.getTop_stories().get(position).getImage());
                     intent.putExtra("id",news.getTop_stories().get(position).getId());
                     context.startActivity(intent);
                 }

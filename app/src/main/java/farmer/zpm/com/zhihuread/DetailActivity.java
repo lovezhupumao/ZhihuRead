@@ -4,12 +4,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.webkit.WebView;
+import android.widget.ImageView;
+
+import com.bumptech.glide.Glide;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import farmer.zpm.com.zhihuread.api.Api;
 import farmer.zpm.com.zhihuread.entity.NewsContent;
+import farmer.zpm.com.zhihuread.utils.ImageUtil;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -21,6 +28,9 @@ public class DetailActivity extends AppCompatActivity {
     private int id=-1;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+    private String imageurl;
+    @BindView(R.id.image_bg)
+    ImageView imageView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +40,9 @@ public class DetailActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         id=getIntent().getIntExtra("id",-1);
+        imageurl= getIntent().getStringExtra("imageurl");
+        if (imageurl!=null)
+            ImageUtil.loadImg(imageView, imageurl);
         Log.i("ididididi","------"+id);
         if (id!=-1){
             Api.getInstance().service.getContentById(id).subscribeOn(Schedulers.newThread())
@@ -49,11 +62,31 @@ public class DetailActivity extends AppCompatActivity {
                         public void onNext(NewsContent newsContent) {
                             String content=newsContent.getBody();
                             Log.i("---",content);
+
                             webview.loadDataWithBaseURL(null,content,"text/html", "utf-8",null);
                             getSupportActionBar().setTitle(newsContent.getTitle());
                         }
                     });
         }
 
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_overaction, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) onBackPressed();
+        return super.onOptionsItemSelected(item);
+    }
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        try {
+            return super.dispatchTouchEvent(ev);
+        } catch (Exception e) {
+            return false;
+        }
     }
 }
