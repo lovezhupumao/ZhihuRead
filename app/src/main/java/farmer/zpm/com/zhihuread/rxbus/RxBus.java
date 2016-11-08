@@ -72,6 +72,7 @@ public class RxBus {
         if (null != subjects) {
             subjectMapper.remove(tag);
         }
+        LogUtil.d("unregister", tag +" ");
     }
 
     /**
@@ -89,7 +90,7 @@ public class RxBus {
         List<Subject> subjects = subjectMapper.get(tag);
         if (null != subjects) {
             subjects.remove((Subject<?, ?>) observable);
-            if (isEmpty(subjects)) {
+            if (!isEmpty(subjects)) {
                 subjectMapper.remove(tag);
                 LogUtil.d("unregister", tag + "  size:" + subjects.size());
             }

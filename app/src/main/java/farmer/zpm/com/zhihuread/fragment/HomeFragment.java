@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,6 +29,7 @@ import farmer.zpm.com.zhihuread.api.Api;
 import farmer.zpm.com.zhihuread.entity.News;
 import farmer.zpm.com.zhihuread.viewholder.BaseViewHolder;
 import rx.Subscriber;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
@@ -48,6 +50,8 @@ public class HomeFragment extends Fragment {
     private int begin = 0;
     private boolean isRefreshable = true, isHasHeadView = false, isEmpty = false;
     private Unbinder unbinder;
+    private Subscription observable;
+
     public static HomeFragment newInstance(Class<? extends BaseViewHolder> vh, String type) {
         Bundle arguments = new Bundle();
         arguments.putString("vh", vh.getCanonicalName());
@@ -79,6 +83,7 @@ public class HomeFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+        observable.unsubscribe();
     }
 
     private void initView(Context context) {
@@ -89,7 +94,8 @@ public class HomeFragment extends Fragment {
         mLayoutManager = new LinearLayoutManager(context);
         recyclerview.setLayoutManager(mLayoutManager);
         recyclerview.setItemAnimator(new DefaultItemAnimator());
-        Api.getInstance().service.login().subscribeOn(Schedulers.newThread())
+        observable= Api.getInstance().service.login().subscribeOn(Schedulers.newThread())
+                .last()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<News>() {
                     @Override

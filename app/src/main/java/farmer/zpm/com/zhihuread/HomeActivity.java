@@ -10,6 +10,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,7 +22,13 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import farmer.zpm.com.zhihuread.adapter.FragmentAdapter;
+import farmer.zpm.com.zhihuread.entity.News;
+import farmer.zpm.com.zhihuread.entity.NewsContent;
 import farmer.zpm.com.zhihuread.fragment.HomeFragment;
+import farmer.zpm.com.zhihuread.rxbus.RxManager;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.subjects.PublishSubject;
 
 public class HomeActivity extends AppCompatActivity {
     @BindView(R.id.toolbar)
@@ -33,7 +40,7 @@ public class HomeActivity extends AppCompatActivity {
     @BindView(R.id.tabs)
     TabLayout tabs;
     private String[] mTabs = {"民谣", "摇滚", "电子", "流行", "爵士", "独立", "故事", "新世纪", "精品推荐", "原声", "乐评", "影评", "古典", "游记"};
-
+    private RxManager manager=new RxManager();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +65,20 @@ public class HomeActivity extends AppCompatActivity {
         tabs.setupWithViewPager(viewpager);
         tabs.setTabsFromPagerAdapter(viewpager.getAdapter());
 
+        manager.on("a", new Action1<Object>() {
+            @Override
+            public void call(Object o) {
+                NewsContent content=(NewsContent)o;
+                Log.e("----------",content.getTitle());
+            }
+        });
+        manager.on("a", new Action1<Object>() {
+            @Override
+            public void call(Object o) {
+                NewsContent content=(NewsContent)o;
+                Log.e("----------","****");
+            }
+        });
     }
 
     @Override
@@ -79,4 +100,10 @@ public class HomeActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        manager.clear();
+        Log.i("HomeActivity","destory");
+    }
 }

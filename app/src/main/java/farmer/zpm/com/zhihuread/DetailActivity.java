@@ -1,9 +1,11 @@
 package farmer.zpm.com.zhihuread;
 
+import android.database.Observable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -16,8 +18,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import farmer.zpm.com.zhihuread.api.Api;
 import farmer.zpm.com.zhihuread.entity.NewsContent;
+import farmer.zpm.com.zhihuread.rxbus.RxManager;
 import farmer.zpm.com.zhihuread.utils.ImageUtil;
 import rx.Subscriber;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -31,6 +35,9 @@ public class DetailActivity extends AppCompatActivity {
     private String imageurl;
     @BindView(R.id.image_bg)
     ImageView imageView;
+    RxManager manager=new RxManager();
+    private Subscription a;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,7 +52,7 @@ public class DetailActivity extends AppCompatActivity {
             ImageUtil.loadImg(imageView, imageurl);
         Log.i("ididididi","------"+id);
         if (id!=-1){
-            Api.getInstance().service.getContentById(id).subscribeOn(Schedulers.newThread())
+             a = Api.getInstance().service.getContentById(id).subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Subscriber<NewsContent>() {
                         @Override
@@ -55,18 +62,19 @@ public class DetailActivity extends AppCompatActivity {
 
                         @Override
                         public void onError(Throwable e) {
-                            Log.e("******",e.getMessage());
+                            Log.e("******", e.getMessage());
                         }
 
                         @Override
                         public void onNext(NewsContent newsContent) {
-                            String content=newsContent.getBody();
-                            Log.i("---",content);
+                            String content = newsContent.getBody();
 
-                            webview.loadDataWithBaseURL(null,content,"text/html", "utf-8",null);
+                            webview.loadDataWithBaseURL(null, content, "text/html", "utf-8", null);
                             getSupportActionBar().setTitle(newsContent.getTitle());
+                            manager.post("a", newsContent);
                         }
                     });
+//            manager.add(a);
         }
 
     }
@@ -88,5 +96,16 @@ public class DetailActivity extends AppCompatActivity {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        a.unsubscribe();
+
+    }
+    @Override
+    public void onBackPressed() {
+         super.onBackPressed();
     }
 }
